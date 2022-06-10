@@ -96,16 +96,24 @@ int main(void)
   /* USER CODE END 2 */
 
   /* Infinite loop */
+  HAL_TIM_Base_Start_IT(&htim1);
+
+  /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(GPIOC,LED_Pin);
-    HAL_Delay(2000);
+    
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
 }
+/* Este callback se activa con el TIMx update interrupt 
+   Funcion definida en stm32f1xx_hal_tim.h */
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+  HAL_GPIO_TogglePin(GPIOC,LED_Pin);
+} 
 
 /**
   * @brief System Clock Configuration
