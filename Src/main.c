@@ -31,6 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -42,6 +43,9 @@
  TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart1;
+
+int Tiempoms = 500;
+int Flag = 1; 
 
 /* USER CODE BEGIN PV */
 
@@ -103,7 +107,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    
+    HAL_GPIO_TogglePin(GPIOC, LED_Pin);
+    HAL_Delay(Tiempoms); 
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -112,8 +117,15 @@ int main(void)
    Funcion definida en stm32f1xx_hal_tim.h */
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-  HAL_GPIO_TogglePin(GPIOC,LED_Pin);
-} 
+  if (Flag) {
+    if (Tiempoms > 50) Tiempoms--;
+    else                Flag = 0;
+  }
+  else {
+    if (Tiempoms < 500) Tiempoms++;
+    else                 Flag = 1;
+  }
+}
 
 /**
   * @brief System Clock Configuration
@@ -174,7 +186,8 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 10000;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 500;
+  //htim1.Init.Period = 500;
+  htim1.Init.Period = 20;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
